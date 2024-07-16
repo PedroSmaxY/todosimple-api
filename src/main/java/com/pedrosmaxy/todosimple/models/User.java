@@ -1,7 +1,6 @@
 package com.pedrosmaxy.todosimple.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.scheduling.config.Task;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -37,7 +36,8 @@ public class User {
     @Size(groups = CreateUser.class, min = 8, max = 60)
     private String password;
 
-    // private List<Task> tasks = new ArrayList<Task>();
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks = new ArrayList<Task>();
 
 
     public User() {}
@@ -62,6 +62,14 @@ public class User {
 
     public void setUsername(@NotNull(groups = CreateUser.class) @NotEmpty(groups = CreateUser.class) @Size(groups = CreateUser.class, min = 2, max = 100) String username) {
         this.username = username;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public @NotNull(groups = { CreateUser.class, UpdateUser.class }) @NotEmpty(groups = { CreateUser.class, UpdateUser.class }) @Size(groups = CreateUser.class, min = 8, max = 60) String getPassword() {
