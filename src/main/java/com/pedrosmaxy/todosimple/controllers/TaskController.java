@@ -2,6 +2,7 @@ package com.pedrosmaxy.todosimple.controllers;
 
 import com.pedrosmaxy.todosimple.models.Task;
 import com.pedrosmaxy.todosimple.services.TaskService;
+import com.pedrosmaxy.todosimple.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,10 +21,20 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/{id}")
-    public ResponseEntity<Task> get(@PathVariable Long id) {
+    public ResponseEntity<Task> findById(@PathVariable Long id) {
         Task task = this.taskService.findById(id);
         return ResponseEntity.ok().body(task);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
+        userService.findById(userId);
+        List<Task> tasks = this.taskService.findAllByUserId(userId);
+        return ResponseEntity.ok().body(tasks);
     }
 
     @PostMapping
@@ -47,11 +58,5 @@ public class TaskController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.taskService.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
-        List<Task> tasks = this.taskService.findAllByUserId(userId);
-        return ResponseEntity.ok().body(tasks);
     }
 }
