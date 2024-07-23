@@ -3,6 +3,7 @@ package com.pedrosmaxy.todosimple.services;
 import com.pedrosmaxy.todosimple.models.Task;
 import com.pedrosmaxy.todosimple.models.User;
 import com.pedrosmaxy.todosimple.repositories.TaskRepository;
+import com.pedrosmaxy.todosimple.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ public class TaskService {
 
     public Task findById(Long id) {
         Optional<Task> task = taskRepository.findById(id);
-        return task.orElseThrow(() -> new RuntimeException(
+        return task.orElseThrow(() -> new ObjectNotFoundException(
                 "Task not found! id: " + id + ", Tipo: " + Task.class.getName()
         ));
     }
@@ -30,6 +31,7 @@ public class TaskService {
         return this.taskRepository.findByUser_Id(userId);
     }
 
+    
     @Transactional
     public Task create(Task task) {
         User user = this.userService.findById(task.getUser().getId());

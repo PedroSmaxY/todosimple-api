@@ -3,7 +3,9 @@ package com.pedrosmaxy.todosimple.services;
 import com.pedrosmaxy.todosimple.models.User;
 import com.pedrosmaxy.todosimple.repositories.TaskRepository;
 import com.pedrosmaxy.todosimple.repositories.UserRepository;
+import com.pedrosmaxy.todosimple.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +22,11 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> user = this.userRepository.findById(id);
-        return user.orElseThrow(() -> new RuntimeException(
+        return user.orElseThrow(() -> new ObjectNotFoundException(
                 "User not found! Id: " + id + ", Type: " + User.class.getName())
         );
-    };
+    }
+
 
     @Transactional
     public User create(User obj) {
@@ -44,7 +47,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException(
+            throw new DataIntegrityViolationException(
                     "Not possible to delete because exist related entities!"
             );
         }
