@@ -29,7 +29,6 @@ public class UserService {
     public User create(User obj) {
         obj.setId(null);
         obj = this.userRepository.save(obj);
-        this.taskRepository.saveAll(obj.getTasks());
         return obj;
     }
 
@@ -45,7 +44,9 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Not possible to delete because exist related entities");
+            throw new RuntimeException(
+                    "Not possible to delete because exist related entities!"
+            );
         }
     }
 }
